@@ -31,8 +31,14 @@
 #include <string>
 #include <iostream>
 
-#ifndef CUDA
+#ifdef IN_IDE_PARSER
+#define WAVE_PROPAGATION_SOLVER 5
+#endif
+
+#if not defined CUDA and WAVE_PROPAGATION_SOLVER!=5
 #include "blocks/SWE_WavePropagationBlock.hh"
+#elif not defined CUDA and WAVE_PROPAGATION_SOLVER==5
+#include "blocks/SWE_WavePropagationBlockSIMD.hh"
 #else
 #include "blocks/cuda/SWE_WavePropagationBlockCuda.hh"
 #endif
@@ -137,7 +143,8 @@ int main( int argc, char** argv ) {
                                 (float) 28800., simulationArea);
   #else
   // create a simple artificial scenario
-  SWE_BathymetryDamBreakScenario l_scenario;
+  //SWE_BathymetryDamBreakScenario l_scenario;
+  SWE_SplashingConeScenario l_scenario;
   #endif
 
   //! number of checkpoints for visualization (at each checkpoint in time, an output file is written).
@@ -151,10 +158,12 @@ int main( int argc, char** argv ) {
   l_dY = (l_scenario.getBoundaryPos(BND_TOP) - l_scenario.getBoundaryPos(BND_BOTTOM) )/l_nY;
 
   // create a single wave propagation block
-  #ifndef CUDA
-  SWE_WavePropagationBlock l_wavePropgationBlock(l_nX,l_nY,l_dX,l_dY);
+  #if not defined CUDA and WAVE_PROPAGATION_SOLVER!=5
+    SWE_WavePropagationBlock l_wavePropgationBlock(l_nX,l_nY,l_dX,l_dY);
+  #elif not defined CUDA and WAVE_PROPAGATION_SOLVER==5
+    SWE_WavePropagationBlockSIMD l_wavePropgationBlock(l_nX, l_nY, l_dX, l_dY);
   #else
-  SWE_WavePropagationBlockCuda l_wavePropgationBlock(l_nX,l_nY,l_dX,l_dY);
+    SWE_WavePropagationBlockCuda l_wavePropgationBlock(l_nX,l_nY,l_dX,l_dY);
   #endif
 
   //! origin of the simulation domain in x- and y-direction
@@ -233,7 +242,7 @@ int main( int argc, char** argv ) {
     while( l_t < l_checkPoints[c] ) {
       // set values in ghost cells:
       l_wavePropgationBlock.setGhostLayer();
-      
+
       // reset the cpu clock
       tools::Logger::logger.resetClockToCurrentTime("Cpu");
 
