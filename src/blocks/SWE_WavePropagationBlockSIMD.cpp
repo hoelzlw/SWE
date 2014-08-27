@@ -105,7 +105,7 @@ SWE_WavePropagationBlockSIMD::SWE_WavePropagationBlockSIMD (int l_nx, int l_ny, 
 
 /**
  * Compute net updates for the block.
- * The member variable #maxTimestep will be updated with the 
+ * The member variable #maxTimestep will be updated with the
  * maximum allowed time step size
  */
 void
@@ -125,7 +125,7 @@ SWE_WavePropagationBlockSIMD::computeNumericalFluxes ()
 	const int end_ny_1_1 = ny + 1;
 	const int end_ny_1_2 = ny + 2;
 
-#if  WAVE_PROPAGATION_SOLVER==5
+#if  WAVE_PROPAGATION_SOLVER==5 and not defined VECTOR_NOVEC
 	// Note, that ny is used instead of (ny + 1). This is due to the fact, that in the loop below, j starts with 1!
 	// So, for SSE, for instance, j takes values 1, 5, 9, 13, ...
 	// Now, consider ny == 3
