@@ -32,16 +32,18 @@
 #include <iostream>
 
 #ifdef IN_IDE_PARSER
-#define WAVE_PROPAGATION_SOLVER 5
-#endif
+    #define WAVE_PROPAGATION_SOLVER 5
+#endif /* IN_IDE_PARSER */
 
-#if not defined CUDA and WAVE_PROPAGATION_SOLVER!=5
-#include "blocks/SWE_WavePropagationBlock.hh"
-#elif not defined CUDA and WAVE_PROPAGATION_SOLVER==5
-#include "blocks/SWE_WavePropagationBlockSIMD.hh"
+#ifdef CUDA
+    #include "blocks/cuda/SWE_WavePropagationBlockCuda.hh"
 #else
-#include "blocks/cuda/SWE_WavePropagationBlockCuda.hh"
-#endif
+    #if WAVE_PROPAGATION_SOLVER != 5
+        #include "blocks/SWE_WavePropagationBlock.hh"
+    #else
+        #include "blocks/SWE_WavePropagationBlockSIMD.hh"
+    #endif /* WAVE_PROPAGATION_SOLVER */
+#endif /* CUDA */
 
 #ifdef WRITENETCDF
 #include "writer/NetCdfWriter.hh"
@@ -87,6 +89,8 @@ int main( int argc, char** argv ) {
 	  return 1;
   case tools::Args::Help:
 	  return 0;
+  default:
+      break;
   }
 
   //! number of grid cells in x- and y-direction.
@@ -158,13 +162,15 @@ int main( int argc, char** argv ) {
   l_dY = (l_scenario.getBoundaryPos(BND_TOP) - l_scenario.getBoundaryPos(BND_BOTTOM) )/l_nY;
 
   // create a single wave propagation block
-  #if not defined CUDA and WAVE_PROPAGATION_SOLVER!=5
-    SWE_WavePropagationBlock l_wavePropgationBlock(l_nX,l_nY,l_dX,l_dY);
-  #elif not defined CUDA and WAVE_PROPAGATION_SOLVER==5
-    SWE_WavePropagationBlockSIMD l_wavePropgationBlock(l_nX, l_nY, l_dX, l_dY);
-  #else
+  #ifdef CUDA
     SWE_WavePropagationBlockCuda l_wavePropgationBlock(l_nX,l_nY,l_dX,l_dY);
-  #endif
+  #else
+    #if WAVE_PROPAGATION_SOLVER != 5
+      SWE_WavePropagationBlock l_wavePropgationBlock(l_nX,l_nY,l_dX,l_dY);
+    #else
+      SWE_WavePropagationBlockSIMD l_wavePropgationBlock(l_nX, l_nY, l_dX, l_dY);
+    #endif /* WAVE_PROPAGATION_SOLVER */
+  #endif /* CUDA */
 
   //! origin of the simulation domain in x- and y-direction
   float l_originX, l_originY;
