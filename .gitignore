@@ -11,3 +11,7 @@ documentation/doxy/
 .project
 .cproject
 .pydevproject
+
+.kdev4/
+SWE.kdev4
+build/output/
