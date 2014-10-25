@@ -125,7 +125,7 @@ SWE_WavePropagationBlockSIMD::computeNumericalFluxes ()
 	const int end_ny_1_1 = ny + 1;
 	const int end_ny_1_2 = ny + 2;
 
-#if  WAVE_PROPAGATION_SOLVER==5 and not defined VECTOR_NOVEC
+#if  WAVE_PROPAGATION_SOLVER==5 && VECTOR_EXTENSION != VECTOR_NOVEC
 	// Note, that ny is used instead of (ny + 1). This is due to the fact, that in the loop below, j starts with 1!
 	// So, for SSE, for instance, j takes values 1, 5, 9, 13, ...
 	// Now, consider ny == 3
@@ -157,7 +157,7 @@ SWE_WavePropagationBlockSIMD::computeNumericalFluxes ()
 		for (int i = 1; i < nx + 2; i++) {
 			int j = 1;
 
-#if  WAVE_PROPAGATION_SOLVER==5 and (not defined VECTOR_NOVEC)
+#if  WAVE_PROPAGATION_SOLVER==5 && VECTOR_EXTENSION != VECTOR_NOVEC
 			for (; j < end_ny_V_1; j += VECTOR_LENGTH) {
 				float maxEdgeSpeed;
 
@@ -217,7 +217,7 @@ SWE_WavePropagationBlockSIMD::computeNumericalFluxes ()
 #endif // LOOP_OPENMP
 		for (int i = 1; i < nx + 1; i++) {
 			int j = 1;
-#if  WAVE_PROPAGATION_SOLVER==5 and (not defined VECTOR_NOVEC)
+#if  WAVE_PROPAGATION_SOLVER==5 && VECTOR_EXTENSION != VECTOR_NOVEC
 			for (; j < end_ny_V_2; j += VECTOR_LENGTH) {
 				float maxEdgeSpeed;
 
