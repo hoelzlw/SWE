@@ -127,11 +127,6 @@ class SWE_WavePropagationBlockSIMD : public SWE_Block {
 public:
 	//constructor of a SWE_WavePropagationBlockSIMD.
 	SWE_WavePropagationBlockSIMD (int l_nx, int l_ny, float l_dx, float l_dy);
-	
-#ifdef COUNTFLOPS
-	size_t flops;
-	double time_needed;
-#endif
 
 	//executes a single timestep.
 	virtual void simulateTimestep (float dt);
@@ -158,19 +153,6 @@ public:
 	virtual
 	~SWE_WavePropagationBlockSIMD ()
 	{
-#ifdef COUNTFLOPS
-#ifdef LOOP_OPENMP
-		std :: cout << "Flops: " << flops << std :: endl;
-		std :: cout << "Time spend: " << time_needed << std :: endl;
-		std :: cout << "Flops per second: " << std :: scientific << flops / time_needed << std :: endl;
-#else
-		flops = wavePropagationSolver.flops;
-		
-		std :: cout << "Flops: " << flops << std :: endl;
-		std :: cout << "Time spend: " << time_needed / CLOCKS_PER_SEC<< std :: endl;
-		std :: cout << "Flops per second: " << std :: scientific << flops / time_needed * CLOCKS_PER_SEC << std :: endl;
-#endif
-#endif
 	}
 };
 

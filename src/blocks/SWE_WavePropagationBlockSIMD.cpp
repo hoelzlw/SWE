@@ -95,11 +95,6 @@ SWE_WavePropagationBlockSIMD::SWE_WavePropagationBlockSIMD (int l_nx, int l_ny, 
 	hNetUpdatesAbove (nx, ny + 1),
 	hvNetUpdatesBelow (nx, ny + 1),
 	hvNetUpdatesAbove (nx, ny + 1)
-#ifdef COUNTFLOPS
-	, // don't forget the comma, to extend the list above
-	flops(0),
-	time_needed(0.0)
-#endif
 {
 }
 
@@ -111,13 +106,6 @@ SWE_WavePropagationBlockSIMD::SWE_WavePropagationBlockSIMD (int l_nx, int l_ny, 
 void
 SWE_WavePropagationBlockSIMD::computeNumericalFluxes ()
 {
-#ifdef COUNTFLOPS
-#ifdef LOOP_OPENMP
-	const double time_begin = omp_get_wtime();
-#else
-	const double time_begin = clock();
-#endif
-#endif
 	//maximum (linearized) wave speed within one iteration
 	float maxWaveSpeed = (float) 0.;
 
@@ -272,9 +260,6 @@ SWE_WavePropagationBlockSIMD::computeNumericalFluxes ()
 #pragma omp critical
 		{
 			maxWaveSpeed = std::max (l_maxWaveSpeed, maxWaveSpeed);
-#ifdef COUNTFLOPS
-			flops += wavePropagationSolver.flops;
-#endif
 		}
 
 	} // #pragma omp parallel
@@ -295,13 +280,6 @@ SWE_WavePropagationBlockSIMD::computeNumericalFluxes ()
 		//might happen in dry cells
 		maxTimestep = std::numeric_limits<float>::max ();
 	}
-#ifdef COUNTFLOPS
-#ifdef LOOP_OPENMP
-	time_needed += omp_get_wtime() - time_begin;
-#else
-	time_needed += clock() - time_begin;
-#endif
-#endif
 }
 
 /**

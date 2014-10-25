@@ -113,8 +113,6 @@ vars.AddVariables(
   BoolVariable( 'xmlRuntime', 'use a xml-file for runtime parameters', False ),
 
   BoolVariable( 'copyenv', 'copy the whole environment', False ),
-
-  BoolVariable( 'countflops', 'enable flop counting; defines the macro COUNTFLOPS', False )
 )
 
 # external variables
@@ -227,9 +225,6 @@ if env['simdExtensions'] == 'SSE4':
   env.Append(CCFLAGS=['-msse4'])
 elif env['simdExtensions'] == 'AVX':
   env.Append(CCFLAGS=['-mavx'])
-
-if env['countflops']:
-  env.Append(CCFLAGS=['-DCOUNTFLOPS'])
 
 # Vectorization?
 if env['compileMode'] == 'release' and env['vectorize']:
