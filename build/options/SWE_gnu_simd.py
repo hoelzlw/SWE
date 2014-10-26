@@ -30,3 +30,5 @@
 #solver='fwave'
 solver='augrie_simd'
 simdExtensions='SSE4'
+compiler='gnu'
+silentBuild='yes'

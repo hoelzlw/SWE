@@ -113,6 +113,8 @@ vars.AddVariables(
   BoolVariable( 'xmlRuntime', 'use a xml-file for runtime parameters', False ),
 
   BoolVariable( 'copyenv', 'copy the whole environment', False ),
+
+  BoolVariable( 'silentBuild', 'deactivate "#pragma message" lines', False)
 )
 
 # external variables
@@ -217,8 +219,15 @@ elif env['compileMode'] == 'release':
 
 # Other compiler flags (for all compilers)
 if env['compiler'] != 'cray':
-  env.Append(CCFLAGS=['-fstrict-aliasing', '-fargument-noalias', '-Wall', '-Wextra', '-Wstrict-aliasing=2', '-Werror'])
-  # env.Append(CCFLAGS=['-fno-strict-aliasing', '-fargument-noalias', '-g', '-g3', '-ggdb', '-Wall', '-Wextra', '-Wstrict-aliasing=2'])
+  env.Append(CCFLAGS=['-Wall', '-Wextra', '-Werror'])
+
+if env['compiler'] == 'gnu':
+  env.Append(CCFLAGS=['-fstrict-aliasing', '-fargument-noalias', '-Wstrict-aliasing=2'])
+else:
+  env.Append(CCFLAGS=['-fno-strict-aliasing'])
+
+if env['silentBuild']:
+  env.Append(CPPDEFINES=['SILENT_BUILD'])
 
 # Vectorization via Intrinsics
 if env['simdExtensions'] == 'SSE4':
