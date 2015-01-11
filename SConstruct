@@ -245,11 +245,13 @@ if env['compiler'] == 'intel' and env['showVectorization']:
 
 # OpenMP parallelism
 if env['openmp']:
+  env.Append(CPPDEFINES=['LOOP_OPENMP'])
   if env['compiler'] == 'intel':
     env.Append(CCFLAGS=['-openmp'])
     env.Append(LINKFLAGS=['-openmp'])
   if env['compiler'] == 'gnu':
     env.Append(CCFLAGS=['-fopenmp'])
+    env.Append(LINKFLAGS=['-fopenmp'])
   # cray: OpenMP turned on by default
 
 # Platform

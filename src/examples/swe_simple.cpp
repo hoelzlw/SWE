@@ -148,7 +148,7 @@ int main( int argc, char** argv ) {
   #else
   // create a simple artificial scenario
   //SWE_BathymetryDamBreakScenario l_scenario;
-  SWE_SplashingPoolScenario l_scenario;
+  SWE_SplashingConeScenario l_scenario;
   #endif
 
   //! number of checkpoints for visualization (at each checkpoint in time, an output file is written).
