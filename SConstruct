@@ -219,7 +219,7 @@ elif env['compileMode'] == 'release':
 
 # Other compiler flags (for all compilers)
 if env['compiler'] != 'cray':
-  env.Append(CCFLAGS=['-Wall', '-Wextra', '-Werror'])
+  env.Append(CCFLAGS=['-Wall', '-Wextra', '-Werror', '-pedantic-errors'])
 
 if env['compiler'] == 'gnu':
   env.Append(CCFLAGS=['-fstrict-aliasing', '-fargument-noalias', '-Wstrict-aliasing=2'])

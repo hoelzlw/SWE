@@ -35,20 +35,20 @@
 #include <sstream>
 
 /**
- * class Float1D is a proxy class that can represent, for example, 
- * a column or row vector of a Float2D array, where row (sub-)arrays 
- * are stored with a respective stride. 
- * Besides constructor/deconstructor, the class provides overloading of 
- * the []-operator, such that elements can be accessed as v[i] 
+ * class Float1D is a proxy class that can represent, for example,
+ * a column or row vector of a Float2D array, where row (sub-)arrays
+ * are stored with a respective stride.
+ * Besides constructor/deconstructor, the class provides overloading of
+ * the []-operator, such that elements can be accessed as v[i]
  * (independent of the stride).
- * The class will never allocate separate memory for the vectors, 
- * but point to the interior data structure of Float2D (or other "host" 
+ * The class will never allocate separate memory for the vectors,
+ * but point to the interior data structure of Float2D (or other "host"
  * data structures).
- */ 
+ */
 class Float1D
 {
   public:
-	Float1D(float* _elem, int _rows, int _stride = 1) 
+	Float1D(float* _elem, int _rows, int _stride = 1)
 	: rows(_rows),stride(_stride),elem(_elem)
 	{
 	}
@@ -57,19 +57,19 @@ class Float1D
 	{
 	}
 
-	inline float& operator[](int i) { 
-		return elem[i*stride]; 
+	inline float& operator[](int i) {
+		return elem[i*stride];
 	}
 
 	inline const float& operator[](int i) const {
-		return elem[i*stride]; 
+		return elem[i*stride];
 	}
 
 	inline float* elemVector() {
 		return elem;
 	}
 
-        inline int getSize() const { return rows; }; 
+        inline int getSize() const { return rows; };
 
   private:
     int rows;
@@ -79,12 +79,12 @@ class Float1D
 
 /**
  * class Float2D is a very basic helper class to deal with 2D float arrays:
- * indices represent columns (1st index, "horizontal"/x-coordinate) and 
+ * indices represent columns (1st index, "horizontal"/x-coordinate) and
  * rows (2nd index, "vertical"/y-coordinate) of a 2D grid;
  * values are sequentially ordered in memory using "column major" order.
- * Besides constructor/deconstructor, the class provides overloading of 
- * the []-operator, such that elements can be accessed as a[i][j]. 
- */ 
+ * Besides constructor/deconstructor, the class provides overloading of
+ * the []-operator, such that elements can be accessed as a[i][j].
+ */
 class Float2D {
   public:
   	/**
@@ -106,8 +106,8 @@ class Float2D {
     /**
      * Constructor:
 		 * takes size of the 2D array as parameters and creates a respective Float2D object;
-		 * this constructor does not allocate memory for the array, but uses the allocated memory 
-		 * provided via the respective variable #_elem 
+		 * this constructor does not allocate memory for the array, but uses the allocated memory
+		 * provided via the respective variable #_elem
      * @param _cols	number of columns (i.e., elements in horizontal direction)
      * @param _rows rumber of rows (i.e., elements in vertical directions)
      * @param _elem pointer to a suitably allocated region of memory to be used for thew array elements
@@ -164,15 +164,15 @@ class Float2D {
 		return elem;
 	}
 
-        inline int getRows() const { return rows; }; 
-        inline int getCols() const { return cols; }; 
+        inline int getRows() const { return rows; };
+        inline int getCols() const { return cols; };
 
 	inline Float1D getColProxy(int i) {
 		// subarray elem[i][*]:
                 // starting at elem[i][0] with rows elements and unit stride
 		return Float1D(elem + (rows * i), rows);
 	};
-	
+
 	inline Float1D getRowProxy(int j) {
 		// subarray elem[*][j]
                 // starting at elem[0][j] with cols elements and stride rows
@@ -190,7 +190,7 @@ class Float2D {
 
 /**
  * generate output filenames for the single-SWE_Block version
- * (for serial and OpenMP-parallelised versions that use only a 
+ * (for serial and OpenMP-parallelised versions that use only a
  *  single SWE_Block - one output file is generated per checkpoint)
  *
  *  @deprecated
@@ -200,7 +200,7 @@ inline std::string generateFileName(std::string baseName, int timeStep) {
 	std::ostringstream FileName;
 	FileName << baseName <<timeStep<<".vtk";
 	return FileName.str();
-};
+}
 
 /**
  * Generates an output file name for a multiple SWE_Block version based on the ordering of the blocks.
@@ -221,12 +221,12 @@ inline std::string generateFileName( std::string i_baseName,
 
   l_fileName << i_baseName << "_" << i_blockPositionX << i_blockPositionY << i_fileExtension;
   return l_fileName.str();
-};
+}
 
 /**
  * generate output filename for the multiple-SWE_Block version
- * (for serial and parallel (OpenMP and MPI) versions that use 
- *  multiple SWE_Blocks - for each block, one output file is 
+ * (for serial and parallel (OpenMP and MPI) versions that use
+ *  multiple SWE_Blocks - for each block, one output file is
  *  generated per checkpoint)
  *
  *  @deprecated
@@ -236,7 +236,7 @@ inline std::string generateFileName(std::string baseName, int timeStep, int bloc
 	std::ostringstream FileName;
 	FileName << baseName <<"_"<< block_X<<"_"<<block_Y<<"_"<<timeStep<<i_fileExtension;
 	return FileName.str();
-};
+}
 
 /**
  * Generates an output file name for a multiple SWE_Block version based on the ordering of the blocks.
@@ -265,7 +265,7 @@ inline std::string generateContainerFileName(std::string baseName, int timeStep)
 	std::ostringstream FileName;
 	FileName << baseName<<"_"<<timeStep<<".pvts";
 	return FileName.str();
-};
+}
 
 
 #endif
